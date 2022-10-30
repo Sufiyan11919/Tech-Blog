@@ -91,3 +91,51 @@ router.post('/', withAuth, (req, res) => {
       });
   });
 
+// Route to update a Post if the user is logged in
+router.put('/:id', withAuth, (req, res) => {
+    Post.update(
+    {
+        where: {
+        id: req.params.id
+        }
+    },
+    {
+        title: req.body.title,
+        post_text: req.body.post_text
+    },
+    )
+      .then(data => {
+        if (!data) {
+          res.status(404).json({ message: 'No post found with this id' });
+          return;
+        }
+        res.json(data);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  }); 
+
+// delet a post 
+router.delete('/:id', withAuth, (req, res) => {
+    console.log('id', req.params.id);
+    Post.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(data => {
+        if (!data) {
+          res.status(404).json({ message: 'No post found with this id' });
+          return;
+        }
+        res.json(data);
+      })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  });
+  
+  module.exports = router;
